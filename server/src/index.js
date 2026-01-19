@@ -5,6 +5,8 @@ import { pool } from "./db.js";
 import roadsRouter from "./routes/roads.js";
 import applicationsRouter from "./routes/applications.js";
 import boundariesRouter from "./routes/boundaries.js";
+import authRouter from "./routes/auth.js";
+import agenciesRouter from "./routes/agencies.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,6 +23,8 @@ app.use(express.json());
 app.use("/api/roads", roadsRouter);
 app.use("/api/applications", applicationsRouter);
 app.use("/api/boundaries", boundariesRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/agencies", agenciesRouter);
 
 // Health Check
 app.get("/api/health", async (req, res) => {
@@ -53,6 +57,8 @@ app.get("/", (req, res) => {
       "/api/roads",
       "/api/applications",
       "/api/boundaries",
+      "/api/auth",
+      "/api/agencies",
     ],
   });
 });

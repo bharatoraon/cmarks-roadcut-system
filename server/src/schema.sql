@@ -1,10 +1,3 @@
--- Clean Reset
-DROP TABLE IF EXISTS applications CASCADE;
-DROP TABLE IF EXISTS agencies CASCADE;
-DROP TABLE IF EXISTS roads CASCADE;
-DROP TABLE IF EXISTS regions CASCADE;
-DROP TABLE IF EXISTS wards CASCADE;
-
 -- Enable PostGIS
 CREATE EXTENSION IF NOT EXISTS postgis;
 
@@ -13,6 +6,16 @@ CREATE TABLE IF NOT EXISTS agencies (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     type VARCHAR(50) NOT NULL
+);
+
+-- Users Table for Authentication
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    agency_id INTEGER REFERENCES agencies(id),
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) DEFAULT 'agency_user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Roads Table

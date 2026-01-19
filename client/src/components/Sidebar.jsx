@@ -1,8 +1,8 @@
 import React from 'react';
-import { Map, FileText, AlertTriangle, CheckCircle, Info, Sun, Moon, Car, Navigation, Shield } from 'lucide-react';
+import { Map, FileText, AlertTriangle, CheckCircle, Info, Sun, Moon, Car, Navigation, Shield, LogIn } from 'lucide-react';
 import SearchBox from './SearchBox';
 
-export default function Sidebar({ selectedRoad, address, onApply, onInspect, onNavigate, onOpenAdmin, theme, onToggleTheme, onSearch, showTraffic, onToggleTraffic }) {
+export default function Sidebar({ selectedRoad, address, onApply, onInspect, onNavigate, onOpenAdmin, theme, onToggleTheme, onSearch, showTraffic, onToggleTraffic, user, onLogin }) {
     return (
         <div className="glass-panel" style={{
             position: 'absolute',
@@ -27,6 +27,23 @@ export default function Sidebar({ selectedRoad, address, onApply, onInspect, onN
                     />
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
+                    {user ? (
+                        <button
+                            onClick={() => { localStorage.removeItem('token'); window.location.reload(); }}
+                            style={{ background: 'var(--bg-card)', border: '1px solid var(--glass-border)', borderRadius: '8px', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-primary)' }}
+                            title="Logout"
+                        >
+                            <LogIn size={18} />
+                        </button>
+                    ) : (
+                        <button
+                            onClick={onLogin}
+                            style={{ background: 'var(--bg-card)', border: '1px solid var(--glass-border)', borderRadius: '8px', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-primary)' }}
+                            title="Login"
+                        >
+                            <LogIn size={18} />
+                        </button>
+                    )}
                     <button
                         onClick={onOpenAdmin}
                         style={{ background: 'var(--bg-card)', border: '1px solid var(--glass-border)', borderRadius: '8px', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-primary)' }}

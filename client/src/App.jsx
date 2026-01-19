@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MapView from './components/Map';
 import Sidebar from './components/Sidebar';
 import RequestForm from './components/RequestForm';
 import StreetViewModal from './components/StreetViewModal';
 import RightSidebar from './components/RightSidebar';
 import AdminPanel from './components/AdminPanel';
+import Login from './components/Login';
 
 function App() {
   const [selectedRoad, setSelectedRoad] = useState(null);
@@ -33,6 +34,18 @@ function App() {
   };
 
   const [theme, setTheme] = useState('dark');
+
+  // Auth state
+  const [user, setUser] = useState(null);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Optionally verify token, but for now assume valid
+      // You can add a /me endpoint to verify
+    }
+  }, []);
 
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
@@ -64,7 +77,11 @@ function App() {
   };
 
   const handleApply = () => {
-    setIsFormOpen(true);
+    if (!user) {
+      setIsLoginOpen(true);
+    } else {
+      setIsFormOpen(true);
+    }
   };
 
   const handleInspect = () => {
@@ -79,10 +96,12 @@ function App() {
 
   const handleSubmit = async (data) => {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:5001/api/applications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(data),
       });
@@ -123,6 +142,8 @@ function App() {
         theme={theme}
         onToggleTheme={toggleTheme}
         onSearch={handleSearch}
+        user={user}
+        onLogin={() => setIsLoginOpen(true)}
       />
 
       <RightSidebar layers={layers} onToggleLayer={toggleLayer} />
@@ -143,6 +164,13 @@ function App() {
         <StreetViewModal
           location={streetViewLocation}
           onClose={() => setIsStreetViewOpen(false)}
+        />
+      )}
+
+      {isLoginOpen && (
+        <Login
+          onClose={() => setIsLoginOpen(false)}
+          onLogin={setUser}
         />
       )}
     </div>

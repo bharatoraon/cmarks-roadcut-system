@@ -4,7 +4,6 @@ import { X, Calendar, AlertTriangle } from 'lucide-react';
 export default function RequestForm({ road, onClose, onSubmit }) {
     const [formData, setFormData] = useState({
         purpose: '',
-        agency_id: '2', // Default to CMWSSB
         start_date: '',
         end_date: ''
     });
@@ -44,18 +43,6 @@ export default function RequestForm({ road, onClose, onSubmit }) {
                 </p>
 
                 <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '20px' }}>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Agency</label>
-                        <select
-                            className="input-field"
-                            value={formData.agency_id}
-                            onChange={e => setFormData({ ...formData, agency_id: e.target.value })}
-                        >
-                            <option value="2">CMWSSB (Water/Sewage)</option>
-                            <option value="3">TANGEDCO (Electric)</option>
-                            <option value="4">CMRL (Metro)</option>
-                        </select>
-                    </div>
 
                     <div>
                         <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Purpose of Work</label>

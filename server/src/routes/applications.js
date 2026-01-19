@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import { pool } from "../db.js";
+import { authenticate } from "./auth.js";
 
 // GET /api/applications - Get all applications
 router.get("/", async (req, res) => {
@@ -43,8 +44,9 @@ router.get("/", async (req, res) => {
 });
 
 // POST /api/applications - Create new application
-router.post("/", async (req, res) => {
-  const { agency_id, purpose, start_date, end_date, geometry } = req.body;
+router.post("/", authenticate, async (req, res) => {
+  const { purpose, start_date, end_date, geometry } = req.body;
+  const agency_id = req.user.agency_id;
 
   if (!geometry) {
     return res.status(400).json({ error: "Geometry is required" });
