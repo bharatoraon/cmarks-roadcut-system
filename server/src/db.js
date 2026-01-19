@@ -1,15 +1,18 @@
-const { Pool } = require('pg');
+import { Pool } from "pg";
 
-const pool = new Pool({
-    user: process.env.DB_USER || 'postgres',
-    host: process.env.DB_HOST || 'localhost',
-    database: process.env.DB_NAME || 'cmarks',
-    password: process.env.DB_PASSWORD || 'postgres',
-    port: process.env.DB_PORT || 5432,
-    // SSL configuration for Azure PostgreSQL
-    ssl: process.env.DB_SSL === 'true' ? {
-        rejectUnauthorized: false // Azure PostgreSQL uses self-signed certs
-    } : false
+export const pool = new Pool({
+  user: process.env.DB_USER || "postgres",
+  host: process.env.DB_HOST || "localhost",
+  database: process.env.DB_NAME || "cmarks",
+  password: process.env.DB_PASSWORD || "postgres",
+  port: process.env.DB_PORT || 5432,
+  // SSL configuration for Azure PostgreSQL
+  ssl:
+    process.env.DB_SSL === "true"
+      ? {
+          rejectUnauthorized: false, // Azure PostgreSQL uses self-signed certs
+        }
+      : false,
 });
 
-module.exports = { pool };
+export default pool;
