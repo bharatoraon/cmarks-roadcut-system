@@ -6,7 +6,6 @@ import roadsRouter from "./routes/roads.js";
 import applicationsRouter from "./routes/applications.js";
 import boundariesRouter from "./routes/boundaries.js";
 import authRouter from "./routes/auth.js";
-import agenciesRouter from "./routes/agencies.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,7 +23,6 @@ app.use("/api/roads", roadsRouter);
 app.use("/api/applications", applicationsRouter);
 app.use("/api/boundaries", boundariesRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/agencies", agenciesRouter);
 
 // Health Check
 app.get("/api/health", async (req, res) => {
@@ -37,13 +35,11 @@ app.get("/api/health", async (req, res) => {
     });
   } catch (err) {
     console.error("Health check failed:", err.message);
-    res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Database connection failed",
-        error: err.message,
-      });
+    res.status(500).json({
+      status: "error",
+      message: "Database connection failed",
+      error: err.message,
+    });
   }
 });
 

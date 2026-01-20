@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import MapView from './components/Map';
-import Sidebar from './components/Sidebar';
-import RequestForm from './components/RequestForm';
-import StreetViewModal from './components/StreetViewModal';
-import RightSidebar from './components/RightSidebar';
-import AdminPanel from './components/AdminPanel';
-import Login from './components/Login';
+import React, { useState, useEffect } from "react";
+import MapView from "./components/Map";
+import Sidebar from "./components/Sidebar";
+import RequestForm from "./components/RequestForm";
+import StreetViewModal from "./components/StreetViewModal";
+import RightSidebar from "./components/RightSidebar";
+import AdminPanel from "./components/AdminPanel";
+import Login from "./components/Login";
 
 function App() {
   const [selectedRoad, setSelectedRoad] = useState(null);
@@ -26,21 +26,21 @@ function App() {
     regions: true,
     wards: false,
     applications: true,
-    traffic: false
+    traffic: false,
   });
 
   const toggleLayer = (layerId) => {
-    setLayers(prev => ({ ...prev, [layerId]: !prev[layerId] }));
+    setLayers((prev) => ({ ...prev, [layerId]: !prev[layerId] }));
   };
 
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState("dark");
 
   // Auth state
   const [user, setUser] = useState(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       // Optionally verify token, but for now assume valid
       // You can add a /me endpoint to verify
@@ -48,9 +48,9 @@ function App() {
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
   };
 
   const handleSearch = (place) => {
@@ -67,7 +67,9 @@ function App() {
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ location: lngLat }, (results, status) => {
         if (status === "OK" && results[0]) {
-          const cleanAddress = results[0].formatted_address.replace(", Chennai, Tamil Nadu", "").replace(", India", "");
+          const cleanAddress = results[0].formatted_address
+            .replace(", Chennai, Tamil Nadu", "")
+            .replace(", India", "");
           setSelectedRoadAddress(cleanAddress);
         } else {
           setSelectedRoadAddress("Address not found");
@@ -96,41 +98,62 @@ function App() {
 
   const handleSubmit = async (data) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5001/api/applications', {
-        method: 'POST',
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:5001/api/applications", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),
       });
 
       if (response.ok) {
-        alert('Application Submitted Successfully! ID: ' + (await response.json()).id);
+        alert(
+          "Application Submitted Successfully! ID: " +
+            (await response.json()).id,
+        );
         setIsFormOpen(false);
         window.location.reload();
       } else {
-        alert('Submission failed');
+        alert("Submission failed");
       }
     } catch (err) {
       console.error(err);
-      alert('Error connecting to server');
+      alert("Error connecting to server");
     }
   };
 
   const handleNavigate = () => {
     if (clickedLocation) {
       const { lat, lng } = clickedLocation;
-      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
+      window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+        "_blank",
+      );
     } else {
       alert("Please select a location on the map first.");
     }
   };
 
   return (
-    <div className="App" style={{ position: 'relative', width: '100vw', height: '100vh', background: 'var(--bg-main)', color: 'var(--text-primary)' }}>
-      <MapView onSelectRoad={handleSelectRoad} theme={theme} flyToLocation={flyToLocation} layers={layers} clickedLocation={clickedLocation} />
+    <div
+      className="App"
+      style={{
+        position: "relative",
+        width: "100vw",
+        height: "100vh",
+        background: "var(--bg-main)",
+        color: "var(--text-primary)",
+      }}
+    >
+      <MapView
+        onSelectRoad={handleSelectRoad}
+        theme={theme}
+        flyToLocation={flyToLocation}
+        layers={layers}
+        clickedLocation={clickedLocation}
+      />
 
       <Sidebar
         selectedRoad={selectedRoad}
@@ -156,9 +179,7 @@ function App() {
         />
       )}
 
-      {isAdminOpen && (
-        <AdminPanel onClose={() => setIsAdminOpen(false)} />
-      )}
+      {isAdminOpen && <AdminPanel onClose={() => setIsAdminOpen(false)} />}
 
       {isStreetViewOpen && (
         <StreetViewModal
@@ -168,10 +189,7 @@ function App() {
       )}
 
       {isLoginOpen && (
-        <Login
-          onClose={() => setIsLoginOpen(false)}
-          onLogin={setUser}
-        />
+        <Login onClose={() => setIsLoginOpen(false)} onLogin={setUser} />
       )}
     </div>
   );

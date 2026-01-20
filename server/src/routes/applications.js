@@ -13,10 +13,10 @@ router.get("/", async (req, res) => {
         a.status, 
         a.start_date, 
         a.end_date, 
-        ag.name as agency_name,
+        u.name as user_name,
         ST_AsGeoJSON(a.geom) as geometry 
       FROM applications a
-      JOIN agencies ag ON a.agency_id = ag.id
+      JOIN users u ON a.user_id = u.id
     `;
     const { rows } = await pool.query(query);
 
@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
         id: row.id,
         purpose: row.purpose,
         status: row.status,
-        agency_name: row.agency_name,
+        user_name: row.user_name,
         start_date: row.start_date,
         end_date: row.end_date,
       },
@@ -46,7 +46,7 @@ router.get("/", async (req, res) => {
 // POST /api/applications - Create new application
 router.post("/", authenticate, async (req, res) => {
   const { purpose, start_date, end_date, geometry } = req.body;
-  const agency_id = req.user.agency_id;
+  const user_id = req.user.id;
 
   if (!geometry) {
     return res.status(400).json({ error: "Geometry is required" });
@@ -54,12 +54,12 @@ router.post("/", authenticate, async (req, res) => {
 
   try {
     const query = `
-      INSERT INTO applications (agency_id, purpose, start_date, end_date, geom)
+      INSERT INTO applications (user_id, purpose, start_date, end_date, geom)
       VALUES ($1, $2, $3, $4, ST_GeomFromGeoJSON($5))
       RETURNING id, status
     `;
     const values = [
-      agency_id || 2,
+      user_id,
       purpose,
       start_date,
       end_date,
